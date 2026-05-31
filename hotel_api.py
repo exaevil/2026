@@ -1,16 +1,23 @@
 import requests
+import time
 
-# رابط API عام ومجاني
-url = "https://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=El-Alamein"
+# رابط تجريبي آخر (أكثر استقراراً)
+url = "https://jsonplaceholder.typicode.com/posts/1"
 
-# ملاحظة: استبدل YOUR_API_KEY بمفتاح مجاني من موقع weatherapi.com
-# للتدريب فقط، يمكنك تجربة هذا الرابط بدلاً منه:
-url_test = "https://jsonplaceholder.typicode.com/posts/1"
+# "خدعة" الـ Headers: نجعل السيرفر يظن أن الطلب قادم من متصفح كروم
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
 
-response = requests.get(url_test)
+print("جاري محاولة الاتصال...")
 
-if response.status_code == 200:
-    print("اتصال ناجح! إليك البيانات:")
+try:
+    # أضفنا الـ headers والـ timeout لزيادة الاستقرار
+    response = requests.get(url, headers=headers, timeout=10)
+    response.raise_for_status()
+    
+    print("نجح الاتصال! إليك البيانات:")
     print(response.json())
-else:
-    print("فشل الاتصال، حاول مجدداً.")
+
+except requests.exceptions.RequestException as e:
+    print(f"حدث خطأ أثناء الاتصال: {e}")
